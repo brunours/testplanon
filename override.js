@@ -4,13 +4,24 @@ window.onload = function () {
     const topRowBgColor = "#e8f4ff";
 
     const interval = setInterval(() => {
-        console.log("🔍 Searching for gadget grid...");
-        const gadgetGrid = document.querySelector(".grid-stack-items.pss_block.pss_blocktype_details");
-        if (gadgetGrid) {
-            clearInterval(interval);
-            console.log("✅ Gadget container found:", gadgetGrid);
+        console.log("🔄 Interval running...");
 
-            // Create new row
+        const allDivs = document.querySelectorAll("div");
+        console.log("📦 Total <div> count:", allDivs.length);
+
+        const matching = [...allDivs].filter(el =>
+            el.className?.includes("grid-stack-items") &&
+            el.className?.includes("pss_block") &&
+            el.className?.includes("pss_blocktype_details")
+        );
+
+        console.log("🔍 Matching divs found:", matching.length);
+        if (matching.length > 0) {
+            clearInterval(interval);
+            const gadgetGrid = matching[0];
+            console.log("✅ Found target grid:", gadgetGrid);
+
+            // Create top row
             const topRow = document.createElement("div");
             topRow.style.display = "grid";
             topRow.style.gridTemplateColumns = "repeat(5, 1fr)";
@@ -20,7 +31,6 @@ window.onload = function () {
             topRow.style.borderRadius = "8px";
             topRow.style.marginBottom = "20px";
 
-            // Add 5 mock gadgets
             for (let i = 1; i <= 5; i++) {
                 const gadget = document.createElement("div");
                 gadget.style.background = "white";
@@ -33,9 +43,8 @@ window.onload = function () {
                 topRow.appendChild(gadget);
             }
 
-            // Insert above the main grid
             gadgetGrid.parentNode.insertBefore(topRow, gadgetGrid);
-            console.log("✅ Custom row injected");
+            console.log("✅ Custom row inserted above gadget grid");
         }
     }, 1000);
 };
