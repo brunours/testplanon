@@ -1,15 +1,16 @@
 window.onload = function () {
-    console.log("Planon Override JS executed");
+    console.log("✅ Planon Override JS loaded");
 
     const topRowBgColor = "#e8f4ff";
 
     const interval = setInterval(() => {
+        console.log("🔍 Searching for gadget grid...");
         const gadgetGrid = document.querySelector(".grid-stack-items.pss_block.pss_blocktype_details");
         if (gadgetGrid) {
             clearInterval(interval);
-            console.log("Gadget container found. Injecting custom row...");
+            console.log("✅ Gadget container found:", gadgetGrid);
 
-            // Create custom row
+            // Create new row
             const topRow = document.createElement("div");
             topRow.style.display = "grid";
             topRow.style.gridTemplateColumns = "repeat(5, 1fr)";
@@ -19,7 +20,7 @@ window.onload = function () {
             topRow.style.borderRadius = "8px";
             topRow.style.marginBottom = "20px";
 
-            // Add mock gadgets
+            // Add 5 mock gadgets
             for (let i = 1; i <= 5; i++) {
                 const gadget = document.createElement("div");
                 gadget.style.background = "white";
@@ -32,8 +33,9 @@ window.onload = function () {
                 topRow.appendChild(gadget);
             }
 
-            // Inject above the real gadget grid
+            // Insert above the main grid
             gadgetGrid.parentNode.insertBefore(topRow, gadgetGrid);
+            console.log("✅ Custom row injected");
         }
-    }, 500);
+    }, 1000);
 };
