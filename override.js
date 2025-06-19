@@ -2,7 +2,7 @@
   const TOP_ROW_GADGET_COUNT = 5;
   const TOP_ROW_COLOR = "#597FCD";
   const CHECK_INTERVAL = 500;
-  const MAX_ATTEMPTS = 20;
+  const MAX_ATTEMPTS = 30;
   let attempts = 0;
 
   function log(msg) {
@@ -12,30 +12,46 @@
   function styleTopRow(gadgetDivs) {
     gadgetDivs.slice(0, TOP_ROW_GADGET_COUNT).forEach((div, index) => {
       div.style.backgroundColor = TOP_ROW_COLOR;
-      div.setAttribute("gs-x", index);      // column 0–4
-      div.setAttribute("gs-y", "0");        // top row
-      div.setAttribute("gs-width", "1");    // span 1 column
-      div.setAttribute("gs-height", "1");   // default height
+      div.setAttribute("gs-x", index.toString());
+      div.setAttribute("gs-y", "0");
+      div.setAttribute("gs-width", "1");
+      div.setAttribute("gs-height", "1");
     });
-    log("✅ Top row layout and color applied.");
+    log("✅ Top row layout and style applied.");
   }
 
   function tryInject() {
-    const iframe = document.getElementById("workspaceFrame");
-    if (!iframe) return log("❌ Workspace iframe not found.");
+    const iframe = document.querySelector("iframe#workspaceFrame");
+    if (!iframe) {
+      log("❌ Workspace iframe not found.");
+      return false;
+    }
 
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    if (!doc) return log("❌ Cannot access iframe contentDocument.");
+    let doc;
+    try {
+      doc = iframe.contentDocument || iframe.contentWindow.document;
+    } catch (e) {
+      log("❌ Cannot access iframe contentDocument.");
+      return false;
+    }
+
+    if (!doc) {
+      log("❌ Workspace iframe document not ready.");
+      return false;
+    }
 
     const grid = doc.querySelector(".grid-stack");
-    if (!grid) return log("❌ Grid container not yet available.");
+    if (!grid) {
+      log("❌ Grid not yet available.");
+      return false;
+    }
 
     const gadgetDivs = Array.from(grid.children).filter(div =>
       div.classList.contains("grid-stack-item")
     );
 
     if (gadgetDivs.length < TOP_ROW_GADGET_COUNT) {
-      log(`⏳ Found ${gadgetDivs.length} gadgets, waiting for at least ${TOP_ROW_GADGET_COUNT}...`);
+      log(`⏳ Only ${gadgetDivs.length} gadgets found; waiting for at least ${TOP_ROW_GADGET_COUNT}.`);
       return false;
     }
 
@@ -43,7 +59,7 @@
     return true;
   }
 
-  function waitForGridAndInject() {
+  function waitForIframeAndInject() {
     const interval = setInterval(() => {
       attempts++;
       if (tryInject() || attempts >= MAX_ATTEMPTS) {
@@ -53,10 +69,9 @@
     }, CHECK_INTERVAL);
   }
 
-  // Wait for outer document to be ready before starting
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", waitForGridAndInject);
+    document.addEventListener("DOMContentLoaded", waitForIframeAndInject);
   } else {
-    waitForGridAndInject();
+    waitForIframeAndInject();
   }
 })();
