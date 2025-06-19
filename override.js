@@ -1,51 +1,62 @@
 (function () {
-    const rowColor = "#597FCD"; // Visible blue
-    const maxGadgets = 5;
+  const TOP_ROW_GADGET_COUNT = 5;
+  const TOP_ROW_COLOR = "#597FCD";
+  const CHECK_INTERVAL = 500;
+  const MAX_ATTEMPTS = 20;
+  let attempts = 0;
 
-    function createCustomGadget(index) {
-        const gadget = document.createElement("div");
-        gadget.className = "grid-stack-item pss_block pss_blocktype_details pss_blockname_iframe";
-        gadget.setAttribute("gs-x", index); // Position in row
-        gadget.setAttribute("gs-y", 0); // First row
-        gadget.setAttribute("gs-width", 1);
-        gadget.setAttribute("gs-height", 1);
-        gadget.style.backgroundColor = rowColor;
+  function log(msg) {
+    console.log(`🟦 Planon Override: ${msg}`);
+  }
 
-        const content = document.createElement("div");
-        content.className = "grid-stack-item-content";
-        content.style.color = "#fff";
-        content.style.display = "flex";
-        content.style.alignItems = "center";
-        content.style.justifyContent = "center";
-        content.style.height = "100%";
-        content.style.fontWeight = "bold";
-        content.innerText = `Custom ${index + 1}`;
+  function styleTopRow(gadgetDivs) {
+    gadgetDivs.slice(0, TOP_ROW_GADGET_COUNT).forEach((div, index) => {
+      div.style.backgroundColor = TOP_ROW_COLOR;
+      div.setAttribute("gs-x", index);      // column 0–4
+      div.setAttribute("gs-y", "0");        // top row
+      div.setAttribute("gs-width", "1");    // span 1 column
+      div.setAttribute("gs-height", "1");   // default height
+    });
+    log("✅ Top row layout and color applied.");
+  }
 
-        gadget.appendChild(content);
-        return gadget;
+  function tryInject() {
+    const iframe = document.getElementById("workspaceFrame");
+    if (!iframe) return log("❌ Workspace iframe not found.");
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!doc) return log("❌ Cannot access iframe contentDocument.");
+
+    const grid = doc.querySelector(".grid-stack");
+    if (!grid) return log("❌ Grid container not yet available.");
+
+    const gadgetDivs = Array.from(grid.children).filter(div =>
+      div.classList.contains("grid-stack-item")
+    );
+
+    if (gadgetDivs.length < TOP_ROW_GADGET_COUNT) {
+      log(`⏳ Found ${gadgetDivs.length} gadgets, waiting for at least ${TOP_ROW_GADGET_COUNT}...`);
+      return false;
     }
 
-    function insertCustomRow() {
-        const grid = document.querySelector("#portalgrid > div");
-        if (!grid) {
-            console.warn("⚠️ Grid container not found.");
-            return;
-        }
+    styleTopRow(gadgetDivs);
+    return true;
+  }
 
-        for (let i = 0; i < maxGadgets; i++) {
-            const gadget = createCustomGadget(i);
-            grid.insertBefore(gadget, grid.firstChild); // Add at the top
-        }
-
-        console.log("✅ Custom top row added.");
-    }
-
-    // Retry logic to ensure DOM is ready
+  function waitForGridAndInject() {
     const interval = setInterval(() => {
-        const grid = document.querySelector("#portalgrid > div");
-        if (grid) {
-            clearInterval(interval);
-            insertCustomRow();
-        }
-    }, 500);
+      attempts++;
+      if (tryInject() || attempts >= MAX_ATTEMPTS) {
+        clearInterval(interval);
+        if (attempts >= MAX_ATTEMPTS) log("⛔ Max attempts reached. Stopping.");
+      }
+    }, CHECK_INTERVAL);
+  }
+
+  // Wait for outer document to be ready before starting
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", waitForGridAndInject);
+  } else {
+    waitForGridAndInject();
+  }
 })();
