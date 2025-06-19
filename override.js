@@ -1,79 +1,66 @@
 (function () {
+  const topRowId = "custom-top-row-wrapper";
   const bgColor = "#597FCD";
-  const MAX_ATTEMPTS = 20;
-  let attempt = 0;
 
-  function insertTopRow(grid) {
-    const existing = grid.querySelector(".custom-top-row");
-    if (existing) return; // Avoid duplicates
+  function insertTopRow() {
+    // Prevent duplicates
+    if (document.getElementById(topRowId)) {
+      console.log("⏭️ Top row already present.");
+      return;
+    }
 
-    const newRow = document.createElement("div");
-    newRow.className = "grid-stack-item custom-top-row";
-    newRow.style = `
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 10px;
+    // Find the main grid wrapper
+    const portalGrid = document.querySelector("#portalgrid");
+    if (!portalGrid) {
+      console.warn("❌ #portalgrid not found.");
+      return;
+    }
+
+    // Create a full-width wrapper
+    const wrapper = document.createElement("div");
+    wrapper.id = topRowId;
+    wrapper.style = `
+      width: 100%;
       background-color: ${bgColor};
-      padding: 16px;
-      margin-bottom: 16px;
-      border-radius: 8px;
-      flex-wrap: nowrap;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 0.5rem;
+      box-sizing: border-box;
+      z-index: 999;
     `;
 
+    // Add 5 dummy gadgets
     for (let i = 1; i <= 5; i++) {
       const gadget = document.createElement("div");
-      gadget.textContent = `Custom Gadget ${i}`;
       gadget.style = `
         flex: 1;
         background: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+        margin: 0 0.5rem;
+        padding: 1rem;
         text-align: center;
-        padding: 16px;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+        font-weight: bold;
       `;
-      newRow.appendChild(gadget);
+      gadget.textContent = `Custom Gadget ${i}`;
+      wrapper.appendChild(gadget);
     }
 
-    grid.prepend(newRow);
-    console.log("✅ Top row added to grid.");
+    // Insert above the main grid
+    portalGrid.prepend(wrapper);
+    console.log("✅ New top row added above portal grid.");
   }
 
-  function tryInject(documentContext) {
-    const grid = documentContext.querySelector("#portalgrid > div");
-    if (grid) {
-      insertTopRow(grid);
-      return true;
+  // Wait for DOM readiness
+  const interval = setInterval(() => {
+    const portalGrid = document.querySelector("#portalgrid");
+    if (portalGrid) {
+      clearInterval(interval);
+      insertTopRow();
+    } else {
+      console.log("⏳ Waiting for #portalgrid...");
     }
-    return false;
-  }
-
-  function startInjection() {
-    const interval = setInterval(() => {
-      attempt++;
-      console.log(`⏳ Attempt ${attempt}: Looking for grid...`);
-
-      // Case 1: We're inside iframe already
-      if (tryInject(document)) {
-        clearInterval(interval);
-        return;
-      }
-
-      // Case 2: Look into iframe from top
-      const iframe = document.querySelector("iframe#workspaceFrame");
-      if (iframe && iframe.contentDocument) {
-        if (tryInject(iframe.contentDocument)) {
-          clearInterval(interval);
-          return;
-        }
-      }
-
-      if (attempt >= MAX_ATTEMPTS) {
-        console.warn("❌ Failed to inject top row after max attempts.");
-        clearInterval(interval);
-      }
-    }, 500);
-  }
-
-  startInjection();
+  }, 300);
 })();
