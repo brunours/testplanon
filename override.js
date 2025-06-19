@@ -2,17 +2,28 @@ window.onload = function () {
     console.log("✅ Planon Override JS loaded");
 
     const topRowBgColor = "#e8f4ff";
+    const iframeId = "workspaceframe";
 
     const interval = setInterval(() => {
-        console.log("🔄 Searching for iframe...");
-        const iframe = document.getElementById("workspaceframe");
-        if (!iframe) return;
+        const iframe = document.getElementById(iframeId);
+        if (!iframe) return console.log("⏳ Waiting for iframe...");
+
+        let iframeDoc;
+        try {
+            iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        } catch (e) {
+            return console.warn("❌ Cross-origin access blocked");
+        }
+
+        if (!iframeDoc?.body) return console.log("⏳ Waiting for iframe content...");
+
+        const grid = iframeDoc.querySelector("div.grid-stack");
+        if (!grid) return console.log("⏳ Waiting for grid-stack...");
 
         clearInterval(interval);
-        console.log("✅ Found iframe:", iframe);
+        console.log("✅ Grid found, injecting custom row");
 
-        // Insert custom row above iframe
-        const topRow = document.createElement("div");
+        const topRow = iframeDoc.createElement("div");
         topRow.style.display = "grid";
         topRow.style.gridTemplateColumns = "repeat(5, 1fr)";
         topRow.style.gap = "12px";
@@ -22,7 +33,7 @@ window.onload = function () {
         topRow.style.marginBottom = "20px";
 
         for (let i = 1; i <= 5; i++) {
-            const gadget = document.createElement("div");
+            const gadget = iframeDoc.createElement("div");
             gadget.style.background = "white";
             gadget.style.border = "1px solid #ccc";
             gadget.style.borderRadius = "6px";
@@ -33,7 +44,7 @@ window.onload = function () {
             topRow.appendChild(gadget);
         }
 
-        iframe.parentNode.insertBefore(topRow, iframe);
-        console.log("✅ Injected custom gadget row above iframe");
+        grid.parentNode.insertBefore(topRow, grid);
+        console.log("✅ Custom gadget row injected");
     }, 1000);
 };
