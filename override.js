@@ -1,7 +1,15 @@
 (function () {
   const bgColor = "#597FCD";
   const rowId = "custom-top-row-outside";
-  const iframeSrc = "/case/BP/UoSA_KPI_number_Heating_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false";
+
+  // Define up to 5 unique src values
+  const iframeSources = [
+    "/case/BP/UoSA_KPI_number_Heating_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_number_Cooling_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_number_Energy_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_number_Water_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_number_Fire_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
+  ];
 
   function createRow() {
     const row = document.createElement("div");
@@ -13,27 +21,33 @@
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 0.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     `;
 
-    const iframeContainer = document.createElement("div");
-    iframeContainer.style = `
-      width: 400px;
-      height: 100px;
-      background: white;
-      border-radius: 0.25rem;
-      overflow: hidden;
-    `;
+    iframeSources.forEach((src, index) => {
+      const container = document.createElement("div");
+      container.style = `
+        width: 400px;
+        height: 100px;
+        background: white;
+        border-radius: 0.25rem;
+        overflow: hidden;
+        flex-shrink: 0;
+      `;
 
-    const iframe = document.createElement("iframe");
-    iframe.src = iframeSrc;
-    iframe.width = "100%";
-    iframe.height = "100%";
-    iframe.style.border = "none";
-    iframe.title = "KPI - WO/PPM Heating";
-    iframe.className = "pn-gadget";
+      const iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.width = "100%";
+      iframe.height = "100%";
+      iframe.style.border = "none";
+      iframe.title = `KPI ${index + 1}`;
+      iframe.className = "pn-gadget";
 
-    iframeContainer.appendChild(iframe);
-    row.appendChild(iframeContainer);
+      container.appendChild(iframe);
+      row.appendChild(container);
+    });
+
     return row;
   }
 
@@ -51,7 +65,7 @@
 
     const row = createRow();
     portalGrid.parentNode.insertBefore(row, portalGrid);
-    console.log("✅ Custom top row added outside portal grid.");
+    console.log("✅ Custom top row with multiple iframes added.");
   }
 
   const interval = setInterval(() => {
