@@ -1,66 +1,72 @@
 (function () {
-  const topRowId = "custom-top-row-wrapper";
   const bgColor = "#597FCD";
+  const topRowId = "custom-top-row";
+  const iframeSrc = "/case/BP/UoSA_KPI_number_Heating?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false";
 
-  function insertTopRow() {
-    // Prevent duplicates
-    if (document.getElementById(topRowId)) {
-      console.log("⏭️ Top row already present.");
-      return;
-    }
-
-    // Find the main grid wrapper
-    const portalGrid = document.querySelector("#portalgrid");
-    if (!portalGrid) {
-      console.warn("❌ #portalgrid not found.");
-      return;
-    }
-
-    // Create a full-width wrapper
+  function createTopRowWithIframes(src) {
     const wrapper = document.createElement("div");
     wrapper.id = topRowId;
     wrapper.style = `
-      width: 100%;
+      display: flex;
+      justify-content: space-between;
       background-color: ${bgColor};
       padding: 1rem;
       margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
       border-radius: 0.5rem;
-      box-sizing: border-box;
-      z-index: 999;
+      flex-wrap: nowrap;
+      gap: 1rem;
     `;
 
-    // Add 5 dummy gadgets
     for (let i = 1; i <= 5; i++) {
-      const gadget = document.createElement("div");
-      gadget.style = `
+      const container = document.createElement("div");
+      container.style = `
         flex: 1;
         background: white;
-        margin: 0 0.5rem;
-        padding: 1rem;
-        text-align: center;
         border-radius: 0.25rem;
-        border: 1px solid #ccc;
-        font-weight: bold;
+        overflow: hidden;
+        min-width: 180px;
+        height: 336px;
       `;
-      gadget.textContent = `Custom Gadget ${i}`;
-      wrapper.appendChild(gadget);
+
+      const iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.width = "100%";
+      iframe.height = "100%";
+      iframe.style.border = "none";
+      iframe.title = `KPI - WO/PPM Heating ${i}`;
+      iframe.className = "pn-gadget";
+
+      container.appendChild(iframe);
+      wrapper.appendChild(container);
     }
 
-    // Insert above the main grid
-    portalGrid.prepend(wrapper);
-    console.log("✅ New top row added above portal grid.");
+    return wrapper;
   }
 
-  // Wait for DOM readiness
+  function injectTopRow() {
+    const grid = document.querySelector("#portalgrid > div");
+    if (!grid) {
+      console.warn("❌ Grid container not found.");
+      return;
+    }
+
+    if (document.querySelector(`#${topRowId}`)) {
+      console.log("ℹ️ Top row already exists.");
+      return;
+    }
+
+    const topRow = createTopRowWithIframes(iframeSrc);
+    grid.prepend(topRow);
+    console.log("✅ Top row with KPI gadgets added.");
+  }
+
   const interval = setInterval(() => {
-    const portalGrid = document.querySelector("#portalgrid");
-    if (portalGrid) {
+    const grid = document.querySelector("#portalgrid > div");
+    if (grid) {
       clearInterval(interval);
-      insertTopRow();
+      injectTopRow();
     } else {
-      console.log("⏳ Waiting for #portalgrid...");
+      console.log("⏳ Waiting for #portalgrid > div...");
     }
   }, 300);
 })();
