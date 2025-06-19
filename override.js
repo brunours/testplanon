@@ -2,7 +2,8 @@ window.onload = function () {
     console.log("✅ Planon Override JS loaded");
 
     const topRowBgColor = "#e8f4ff";
-    const iframeId = "frame-BP_CP_Homepage_SYS_BBG_PortalPage_BB_iframe5"; // adjust if needed
+    //const iframeId = "frame-BP_CP_Homepage_SYS_BBG_PortalPage_BB_iframe5"; // adjust if needed
+    const iframeId = "workspaceframe";
 
     const interval = setInterval(() => {
         const iframe = document.getElementById(iframeId);
