@@ -2,7 +2,6 @@
   const bgColor = "#597FCD";
   const rowId = "custom-top-row-outside";
 
-  // Define up to 5 unique src values
   const iframeSources = [
     "/case/BP/UoSA_KPI_number_Heating_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_WO_TeamByMember_Electricians?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
@@ -23,28 +22,49 @@
       border-radius: 0.5rem;
       flex-wrap: wrap;
       gap: 1rem;
+      flex-direction: row;
     `;
+
+    const containers = [];
 
     iframeSources.forEach((src, index) => {
       const container = document.createElement("div");
+      container.classList.add("iframe-container");
       container.style = `
         width: 400px;
-        height: 100px;
+        min-height: 100px;
         background: white;
         border-radius: 0.25rem;
         overflow: hidden;
         flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
       `;
 
       const iframe = document.createElement("iframe");
       iframe.src = src;
       iframe.width = "100%";
-      iframe.height = "100%";
+      iframe.height = "100";
       iframe.style.border = "none";
+      iframe.style.minHeight = "100px";
       iframe.title = `KPI ${index + 1}`;
       iframe.className = "pn-gadget";
 
+      iframe.onload = () => {
+        try {
+          const estimatedHeight = iframe.contentWindow.document.body.scrollHeight;
+          if (estimatedHeight > 100) {
+            iframe.style.height = estimatedHeight + "px";
+          }
+        } catch (e) {
+          // Likely due to cross-origin, fallback handled visually
+        }
+      };
+
       container.appendChild(iframe);
+      containers.push(container);
       row.appendChild(container);
     });
 
@@ -65,7 +85,7 @@
 
     const row = createRow();
     portalGrid.parentNode.insertBefore(row, portalGrid);
-    console.log("✅ Custom top row with multiple iframes added.");
+    console.log("✅ Custom top row with responsive iframes added.");
   }
 
   const interval = setInterval(() => {
