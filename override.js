@@ -18,7 +18,7 @@
     const iframeContainer = document.createElement("div");
     iframeContainer.style = `
       width: 400px;
-      height: 336px;
+      height: 100px;
       background: white;
       border-radius: 0.25rem;
       overflow: hidden;
