@@ -1,77 +1,79 @@
 (function () {
-  const TOP_ROW_GADGET_COUNT = 5;
-  const TOP_ROW_COLOR = "#597FCD";
-  const CHECK_INTERVAL = 500;
-  const MAX_ATTEMPTS = 30;
-  let attempts = 0;
+  const bgColor = "#597FCD";
+  const MAX_ATTEMPTS = 20;
+  let attempt = 0;
 
-  function log(msg) {
-    console.log(`🟦 Planon Override: ${msg}`);
+  function insertTopRow(grid) {
+    const existing = grid.querySelector(".custom-top-row");
+    if (existing) return; // Avoid duplicates
+
+    const newRow = document.createElement("div");
+    newRow.className = "grid-stack-item custom-top-row";
+    newRow.style = `
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 10px;
+      background-color: ${bgColor};
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      flex-wrap: nowrap;
+    `;
+
+    for (let i = 1; i <= 5; i++) {
+      const gadget = document.createElement("div");
+      gadget.textContent = `Custom Gadget ${i}`;
+      gadget.style = `
+        flex: 1;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        padding: 16px;
+      `;
+      newRow.appendChild(gadget);
+    }
+
+    grid.prepend(newRow);
+    console.log("✅ Top row added to grid.");
   }
 
-  function styleTopRow(gadgetDivs) {
-    gadgetDivs.slice(0, TOP_ROW_GADGET_COUNT).forEach((div, index) => {
-      div.style.backgroundColor = TOP_ROW_COLOR;
-      div.setAttribute("gs-x", index.toString());
-      div.setAttribute("gs-y", "0");
-      div.setAttribute("gs-width", "1");
-      div.setAttribute("gs-height", "1");
-    });
-    log("✅ Top row layout and style applied.");
+  function tryInject(documentContext) {
+    const grid = documentContext.querySelector("#portalgrid > div");
+    if (grid) {
+      insertTopRow(grid);
+      return true;
+    }
+    return false;
   }
 
-  function tryInject() {
-    const iframe = document.querySelector("iframe#workspaceFrame");
-    if (!iframe) {
-      log("❌ Workspace iframe not found.");
-      return false;
-    }
-
-    let doc;
-    try {
-      doc = iframe.contentDocument || iframe.contentWindow.document;
-    } catch (e) {
-      log("❌ Cannot access iframe contentDocument.");
-      return false;
-    }
-
-    if (!doc) {
-      log("❌ Workspace iframe document not ready.");
-      return false;
-    }
-
-    const grid = doc.querySelector(".grid-stack");
-    if (!grid) {
-      log("❌ Grid not yet available.");
-      return false;
-    }
-
-    const gadgetDivs = Array.from(grid.children).filter(div =>
-      div.classList.contains("grid-stack-item")
-    );
-
-    if (gadgetDivs.length < TOP_ROW_GADGET_COUNT) {
-      log(`⏳ Only ${gadgetDivs.length} gadgets found; waiting for at least ${TOP_ROW_GADGET_COUNT}.`);
-      return false;
-    }
-
-    styleTopRow(gadgetDivs);
-    return true;
-  }
-
-  function waitForIframeAndInject() {
+  function startInjection() {
     const interval = setInterval(() => {
-      attempts++;
-      if (tryInject() || attempts >= MAX_ATTEMPTS) {
+      attempt++;
+      console.log(`⏳ Attempt ${attempt}: Looking for grid...`);
+
+      // Case 1: We're inside iframe already
+      if (tryInject(document)) {
         clearInterval(interval);
-        if (attempts >= MAX_ATTEMPTS) log("⛔ Max attempts reached. Stopping.");
+        return;
       }
-    }, CHECK_INTERVAL);
+
+      // Case 2: Look into iframe from top
+      const iframe = document.querySelector("iframe#workspaceFrame");
+      if (iframe && iframe.contentDocument) {
+        if (tryInject(iframe.contentDocument)) {
+          clearInterval(interval);
+          return;
+        }
+      }
+
+      if (attempt >= MAX_ATTEMPTS) {
+        console.warn("❌ Failed to inject top row after max attempts.");
+        clearInterval(interval);
+      }
+    }, 500);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", waitForIframeAndInject);
-  } else {
-    waitForIframeAndInject();
-  }
+  startInjection();
 })();
