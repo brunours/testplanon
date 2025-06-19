@@ -28,14 +28,15 @@
     iframeSources.forEach((src, index) => {
       const container = document.createElement("div");
       container.style = `
-        width: 300px;
+        flex: 1;
+        min-width: 200px;
+        max-width: 300px;
         height: 120px;
         background: white;
         border-radius: 0.25rem;
         overflow: hidden;
-        flex-shrink: 0;
         display: flex;
-        align-items: stretch;
+        align-items: stretch
       `;
 
       const iframe = document.createElement("iframe");
