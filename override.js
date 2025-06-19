@@ -2,29 +2,17 @@ window.onload = function () {
     console.log("✅ Planon Override JS loaded");
 
     const topRowBgColor = "#e8f4ff";
-    //const iframeId = "frame-BP_CP_Homepage_SYS_BBG_PortalPage_BB_iframe5"; // adjust if needed
-    const iframeId = "workspaceframe";
 
     const interval = setInterval(() => {
-        const iframe = document.getElementById(iframeId);
-        if (!iframe) {
-            console.log("⏳ Waiting for iframe...");
-            return;
-        }
-
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (!iframeDoc || !iframeDoc.body) {
-            console.log("⏳ Waiting for iframe content...");
-            return;
-        }
+        console.log("🔄 Searching for iframe...");
+        const iframe = document.getElementById("workspaceframe");
+        if (!iframe) return;
 
         clearInterval(interval);
-        console.log("✅ Iframe and content found");
+        console.log("✅ Found iframe:", iframe);
 
-        // Inject into iframe body or specific wrapper
-        const target = iframeDoc.body;
-
-        const topRow = iframeDoc.createElement("div");
+        // Insert custom row above iframe
+        const topRow = document.createElement("div");
         topRow.style.display = "grid";
         topRow.style.gridTemplateColumns = "repeat(5, 1fr)";
         topRow.style.gap = "12px";
@@ -34,7 +22,7 @@ window.onload = function () {
         topRow.style.marginBottom = "20px";
 
         for (let i = 1; i <= 5; i++) {
-            const gadget = iframeDoc.createElement("div");
+            const gadget = document.createElement("div");
             gadget.style.background = "white";
             gadget.style.border = "1px solid #ccc";
             gadget.style.borderRadius = "6px";
@@ -45,7 +33,7 @@ window.onload = function () {
             topRow.appendChild(gadget);
         }
 
-        target.insertBefore(topRow, target.firstChild);
-        console.log("✅ Custom row injected into iframe");
+        iframe.parentNode.insertBefore(topRow, iframe);
+        console.log("✅ Injected custom gadget row above iframe");
     }, 1000);
 };
