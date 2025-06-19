@@ -2,27 +2,31 @@ window.onload = function () {
     console.log("✅ Planon Override JS loaded");
 
     const topRowBgColor = "#e8f4ff";
-    const iframeId = "workspaceframe";
 
     const interval = setInterval(() => {
-        const iframe = document.getElementById(iframeId);
-        if (!iframe) return console.log("⏳ Waiting for iframe...");
+        console.log("🔄 Searching for #workspaceframe...");
 
-        let iframeDoc;
+        const iframe = document.querySelector("iframe#workspaceframe");
+        if (!iframe) return console.log("❌ iframe not yet in DOM");
+
+        let iframeDoc = null;
         try {
-            iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
         } catch (e) {
-            return console.warn("❌ Cross-origin access blocked");
+            console.warn("❌ Access to iframe blocked (cross-origin)");
+            clearInterval(interval);
+            return;
         }
 
-        if (!iframeDoc?.body) return console.log("⏳ Waiting for iframe content...");
+        if (!iframeDoc || !iframeDoc.body) return console.log("⏳ iframe content not ready");
 
         const grid = iframeDoc.querySelector("div.grid-stack");
-        if (!grid) return console.log("⏳ Waiting for grid-stack...");
+        if (!grid) return console.log("⏳ grid-stack not found in iframe");
 
         clearInterval(interval);
-        console.log("✅ Grid found, injecting custom row");
+        console.log("✅ Injecting custom row into iframe");
 
+        // Build top row
         const topRow = iframeDoc.createElement("div");
         topRow.style.display = "grid";
         topRow.style.gridTemplateColumns = "repeat(5, 1fr)";
@@ -45,6 +49,6 @@ window.onload = function () {
         }
 
         grid.parentNode.insertBefore(topRow, grid);
-        console.log("✅ Custom gadget row injected");
+        console.log("✅ Custom row injected above gadget grid");
     }, 1000);
 };
