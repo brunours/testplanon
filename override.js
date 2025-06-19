@@ -1,41 +1,51 @@
-console.log("🟢 Planon Override JS loaded");
+(function () {
+  const bgColor = "#e0f7fa"; // Easily changeable background
 
-(function waitForGrid() {
-    const iframe = document.getElementById("workspaceFrame");
-    if (!iframe || !iframe.contentDocument) {
-        console.log("⏳ Waiting for workspaceFrame...");
-        return setTimeout(waitForGrid, 500);
+  function createTopRow() {
+    const grid = document.querySelector("#portalgrid > div");
+    if (!grid) {
+      console.warn("❌ Grid container not found.");
+      return;
     }
-
-    const gridRoot = iframe.contentDocument.querySelector("div.grid-stack");
-    if (!gridRoot) {
-        console.log("⏳ Waiting for grid-stack inside iframe...");
-        return setTimeout(waitForGrid, 500);
-    }
-
-    console.log("✅ Grid found. Injecting new top row...");
-
-    const rowBgColor = "#e0f7ff"; // Easily change this to update row background color
 
     const newRow = document.createElement("div");
-    newRow.className = "grid-stack-item";
-    newRow.style.cssText = `
-        height: 350px;
-        width: 100%;
-        background-color: ${rowBgColor};
-        margin-bottom: 10px;
+    newRow.className = "grid-stack-item custom-top-row";
+    newRow.style = `
+      display: flex;
+      justify-content: space-between;
+      background-color: ${bgColor};
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
     `;
 
-    newRow.innerHTML = `
-        <div class="grid-stack-item-content"
-             style="display: flex; justify-content: space-around; align-items: center; height: 100%;">
-            <div>🔧 Gadget 1</div>
-            <div>📊 Gadget 2</div>
-            <div>📁 Gadget 3</div>
-            <div>💡 Gadget 4</div>
-            <div>🛠 Gadget 5</div>
-        </div>
-    `;
+    for (let i = 1; i <= 5; i++) {
+      const gadget = document.createElement("div");
+      gadget.style = `
+        flex: 1;
+        margin: 0 0.5rem;
+        padding: 1rem;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        text-align: center;
+      `;
+      gadget.textContent = `Custom Gadget ${i}`;
+      newRow.appendChild(gadget);
+    }
 
-    gridRoot.prepend(newRow);
+    grid.prepend(newRow);
+    console.log("✅ Custom top row added.");
+  }
+
+  // Wait for grid to load
+  const interval = setInterval(() => {
+    const grid = document.querySelector("#portalgrid > div");
+    if (grid) {
+      clearInterval(interval);
+      createTopRow();
+    } else {
+      console.log("⏳ Waiting for #portalgrid > div...");
+    }
+  }, 300);
 })();
