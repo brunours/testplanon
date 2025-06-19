@@ -1,7 +1,7 @@
 (function () {
   const bgColor = "#597FCD";
   const rowId = "custom-top-row-outside";
-  const iframeSrc = "/case/BP/UoSA_KPI_number_Heating?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false";
+  const iframeSrc = "/case/BP/UoSA_KPI_number_Heating_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false";
 
   function createRow() {
     const row = document.createElement("div");
