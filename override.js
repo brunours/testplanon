@@ -28,8 +28,8 @@
     iframeSources.forEach((src, index) => {
       const container = document.createElement("div");
       container.style = `
-        width: 400px;
-        height: 170px;
+        width: 300px;
+        height: 120px;
         background: white;
         border-radius: 0.25rem;
         overflow: hidden;
