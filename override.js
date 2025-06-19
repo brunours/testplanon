@@ -5,10 +5,10 @@
   // Define up to 5 unique src values
   const iframeSources = [
     "/case/BP/UoSA_KPI_number_Heating_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_KPI_number_Cooling_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_KPI_number_Energy_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_KPI_number_Water_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_KPI_number_Fire_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
+    "/case/BP/UoSA_WO_TeamByMember_Electricians?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_WO_TeamByMember_Joiners?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_WO_TeamByMember_Maintenance?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_WO_TeamByMember_Painters?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
   ];
 
   function createRow() {
