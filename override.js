@@ -1,51 +1,51 @@
 (function () {
-  const bgColor = "#e0f7fa"; // Easily changeable background
+    const rowColor = "#597FCD"; // Visible blue
+    const maxGadgets = 5;
 
-  function createTopRow() {
-    const grid = document.querySelector("#portalgrid > div");
-    if (!grid) {
-      console.warn("❌ Grid container not found.");
-      return;
+    function createCustomGadget(index) {
+        const gadget = document.createElement("div");
+        gadget.className = "grid-stack-item pss_block pss_blocktype_details pss_blockname_iframe";
+        gadget.setAttribute("gs-x", index); // Position in row
+        gadget.setAttribute("gs-y", 0); // First row
+        gadget.setAttribute("gs-width", 1);
+        gadget.setAttribute("gs-height", 1);
+        gadget.style.backgroundColor = rowColor;
+
+        const content = document.createElement("div");
+        content.className = "grid-stack-item-content";
+        content.style.color = "#fff";
+        content.style.display = "flex";
+        content.style.alignItems = "center";
+        content.style.justifyContent = "center";
+        content.style.height = "100%";
+        content.style.fontWeight = "bold";
+        content.innerText = `Custom ${index + 1}`;
+
+        gadget.appendChild(content);
+        return gadget;
     }
 
-    const newRow = document.createElement("div");
-    newRow.className = "grid-stack-item custom-top-row";
-    newRow.style = `
-      display: flex;
-      justify-content: space-between;
-      background-color: ${bgColor};
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 0.5rem;
-    `;
+    function insertCustomRow() {
+        const grid = document.querySelector("#portalgrid > div");
+        if (!grid) {
+            console.warn("⚠️ Grid container not found.");
+            return;
+        }
 
-    for (let i = 1; i <= 5; i++) {
-      const gadget = document.createElement("div");
-      gadget.style = `
-        flex: 1;
-        margin: 0 0.5rem;
-        padding: 1rem;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 0.25rem;
-        text-align: center;
-      `;
-      gadget.textContent = `Custom Gadget ${i}`;
-      newRow.appendChild(gadget);
+        for (let i = 0; i < maxGadgets; i++) {
+            const gadget = createCustomGadget(i);
+            grid.insertBefore(gadget, grid.firstChild); // Add at the top
+        }
+
+        console.log("✅ Custom top row added.");
     }
 
-    grid.prepend(newRow);
-    console.log("✅ Custom top row added.");
-  }
-
-  // Wait for grid to load
-  const interval = setInterval(() => {
-    const grid = document.querySelector("#portalgrid > div");
-    if (grid) {
-      clearInterval(interval);
-      createTopRow();
-    } else {
-      console.log("⏳ Waiting for #portalgrid > div...");
-    }
-  }, 300);
+    // Retry logic to ensure DOM is ready
+    const interval = setInterval(() => {
+        const grid = document.querySelector("#portalgrid > div");
+        if (grid) {
+            clearInterval(interval);
+            insertCustomRow();
+        }
+    }, 500);
 })();
