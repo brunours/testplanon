@@ -29,7 +29,7 @@
       const container = document.createElement("div");
       container.style = `
         flex: 1 1 calc(20% - 0.8rem);
-        min-width: 200px;
+        min-width: 150px;
         height: 120px;
         background: white;
         border-radius: 0.25rem;
