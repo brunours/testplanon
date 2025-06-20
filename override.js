@@ -16,7 +16,8 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      overflow-x: auto;
       background-color: ${bgColor};
       padding: 1rem;
       margin-bottom: 1rem;
