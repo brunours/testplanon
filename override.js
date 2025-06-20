@@ -1,7 +1,6 @@
 (function () {
   const bgColor = "#597FCD";
   const rowId = "custom-top-row-outside";
-
   const iframeSources = [
     "/case/BP/UoSA_KPI_number_Heating_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_WO_TeamByMember_Electricians?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
@@ -16,8 +15,8 @@
     row.style = `
       display: flex;
       flex-direction: row;
-      flex-wrap: nowrap;
-      overflow-x: auto;
+      justify-content: space-between;
+      flex-wrap: wrap;
       background-color: ${bgColor};
       padding: 1rem;
       margin-bottom: 1rem;
@@ -28,15 +27,14 @@
     iframeSources.forEach((src, index) => {
       const container = document.createElement("div");
       container.style = `
-        flex: 1;
+        flex: 1 1 calc(20% - 0.8rem);
         min-width: 200px;
-        max-width: 300px;
         height: 120px;
         background: white;
         border-radius: 0.25rem;
         overflow: hidden;
         display: flex;
-        align-items: stretch
+        align-items: stretch;
       `;
 
       const iframe = document.createElement("iframe");
@@ -68,7 +66,7 @@
 
     const row = createRow();
     portalGrid.parentNode.insertBefore(row, portalGrid);
-    console.log("✅ Fixed-width top row with horizontally scrollable iframes added.");
+    console.log("✅ Responsive justified top row with evenly distributed iframes added.");
   }
 
   const interval = setInterval(() => {
