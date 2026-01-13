@@ -18,7 +18,7 @@
       justify-content: space-between;
       flex-wrap: nowrap;
       overflow-x: auto;
-      background-color: ${bgColor};
+      /* background-color: ${bgColor}; */
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 0.5rem;
