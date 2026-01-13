@@ -11,9 +11,9 @@
   ];
 
   const iframeSources2 = [
-    "/case/BP/UoSA_KPI_number_WOs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_KPI_number_PPMs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_KPI_Number_ContractorsOnSite_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_List_WOs_Late?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_List_PPMs_Late?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_List_ContractorsOnSite?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     // Add more URLs as needed
   ];
 
