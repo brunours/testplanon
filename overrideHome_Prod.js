@@ -4,9 +4,9 @@
   const iframeSources = [
     "/case/BP/UoSA_KPI_number_WOs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_KPI_number_PPMs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_WO_TeamByMember_Joiners?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_WO_TeamByMember_Maintenance?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
-    "/case/BP/UoSA_WO_TeamByMember_Painters?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
+    "/case/BP/UoSA_KPI_Number_ContractorsOnSite_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_Number_ContractorsOnSite_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
+    
   ];
 
   function createRow() {
