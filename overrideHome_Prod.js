@@ -6,7 +6,6 @@
     "/case/BP/UoSA_KPI_number_PPMs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_KPI_Number_ContractorsOnSite_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_KPI_Number_ContractorsOnSite_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
-    
   ];
 
   function createRow() {
