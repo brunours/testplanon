@@ -1,15 +1,23 @@
 (function () {
   const bgColor = "#597FCD";
-  const rowId = "custom-top-row-outside";
-  const iframeSources = [
+  const row1Id = "custom-top-row-outside";
+  const row2Id = "custom-second-row-outside";
+
+  const iframeSources1 = [
     "/case/BP/UoSA_KPI_number_WOs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_KPI_number_PPMs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_KPI_Number_ContractorsOnSite_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
     "/case/BP/UoSA_KPI_Number_ContractorsOnSite_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false"
-    
   ];
 
-  function createRow() {
+  const iframeSources2 = [
+    "/case/BP/UoSA_KPI_number_WOs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_number_PPMs_Late_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    "/case/BP/UoSA_KPI_Number_ContractorsOnSite_vignette?IsRunInPortal=true&RenderMode=gadget&ColSpan=false&RowSpan=false",
+    // Add more URLs as needed
+  ];
+
+  function createRow(rowId, sources, height) {
     const row = document.createElement("div");
     row.id = rowId;
     row.style = `
@@ -25,12 +33,12 @@
       gap: 1rem;
     `;
 
-    iframeSources.forEach((src, index) => {
+    sources.forEach((src, index) => {
       const container = document.createElement("div");
       container.style = `
         flex: 1 1 calc(20% - 0.8rem);
         min-width: 150px;
-        height: 120px;
+        height: ${height}px;
         background: white;
         border-radius: 0.25rem;
         overflow: hidden;
@@ -53,30 +61,40 @@
     return row;
   }
 
-  function injectRow() {
-    if (document.querySelector(`#${rowId}`)) {
-      console.log("ℹ️ Top row already exists.");
-      return;
-    }
-
+  function injectRows() {
     const portalGrid = document.querySelector("#portalgrid");
     if (!portalGrid) {
       console.warn("❌ #portalgrid not found.");
       return;
     }
 
-    const row = createRow();
-    portalGrid.parentNode.insertBefore(row, portalGrid);
-    console.log("✅ Responsive justified top row with evenly distributed iframes added.");
+    // Inject first row (120px)
+    if (!document.querySelector(`#${row1Id}`)) {
+      const row1 = createRow(row1Id, iframeSources1, 120);
+      portalGrid.parentNode.insertBefore(row1, portalGrid);
+      console.log("✅ First row (120px) added.");
+    } else {
+      console.log("ℹ️ First row already exists.");
+    }
+
+    // Inject second row (600px)
+    if (!document.querySelector(`#${row2Id}`)) {
+      const row2 = createRow(row2Id, iframeSources2, 600);
+      portalGrid.parentNode.insertBefore(row2, portalGrid);
+      console.log("✅ Second row (600px) added.");
+    } else {
+      console.log("ℹ️ Second row already exists.");
+    }
   }
 
   const interval = setInterval(() => {
     const portalGrid = document.querySelector("#portalgrid");
     if (portalGrid) {
       clearInterval(interval);
-      injectRow();
+      injectRows();
     } else {
       console.log("⏳ Waiting for #portalgrid...");
     }
   }, 300);
 })();
+
