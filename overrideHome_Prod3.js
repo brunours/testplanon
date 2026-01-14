@@ -23,7 +23,7 @@
     row.style = `
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: ${rowId === row1Id ? 'center' : 'space-between'};
       flex-wrap: nowrap;
       overflow-x: auto;
       /* background-color: ${bgColor}; */
@@ -35,6 +35,20 @@
 
     sources.forEach((src, index) => {
       const container = document.createElement("div");
+
+      if (rowId === row1Id) {
+        container.style = `
+          flex: 1 1 150px;
+          min-width: 150px;
+          max-width: 200px;
+          height: ${height}px;
+          background: white;
+          border-radius: 0.25rem;
+          overflow: hidden;
+          display: flex;
+          align-items: stretch;
+        `;
+      } else {
       container.style = `
         flex: 1 1 calc(20% - 0.8rem);
         min-width: 150px;
@@ -45,6 +59,7 @@
         display: flex;
         align-items: stretch;
       `;
+      }
 
       const iframe = document.createElement("iframe");
       iframe.src = src;
