@@ -94,7 +94,7 @@
 
     // Inject second row (600px)
     if (!document.querySelector(`#${row2Id}`)) {
-      const row2 = createRow(row2Id, iframeSources2, 400);
+      const row2 = createRow(row2Id, iframeSources2, 600);
       portalGrid.parentNode.insertBefore(row2, portalGrid);
       console.log("✅ Second row (600px) added.");
     } else {
