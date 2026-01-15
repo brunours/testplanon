@@ -101,11 +101,11 @@
       console.log("ℹ️ First row already exists.");
     }
 
-    // Inject second row (300px)
+    // Inject second row (400px)
     if (!document.querySelector(`#${row2Id}`)) {
-      const row2 = createRow(row2Id, iframeSources2, 300);
+      const row2 = createRow(row2Id, iframeSources2, 400);
       portalGrid.parentNode.insertBefore(row2, portalGrid);
-      console.log("✅ Second row (300px) added.");
+      console.log("✅ Second row (400px) added.");
     } else {
       console.log("ℹ️ Second row already exists.");
     }
