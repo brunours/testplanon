@@ -21,6 +21,7 @@
     const gridbody = document.querySelector("#gridbody");
     if (gridbody) {
       gridbody.style.top = "10px";
+      gridbody.style.height = "calc(100% - 10px)";
       console.log("✅ Gridbody top modified to 10px");
     } else {
       console.warn("❌ #gridbody not found.");
