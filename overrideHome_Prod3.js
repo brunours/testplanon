@@ -36,8 +36,8 @@
       flex-wrap: nowrap;
       overflow-x: auto;
       /* background-color: ${bgColor}; */
-      padding: 1rem;
-      margin-bottom: 1rem;
+      padding: ${rowId === row1Id ? '1rem' : '0'};
+      margin-bottom: ${rowId === row1Id ? '1rem' : '0'};
       border-radius: 0.5rem;
       gap: 1rem;
     `;
