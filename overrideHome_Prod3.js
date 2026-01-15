@@ -17,6 +17,15 @@
     // Add more URLs as needed
   ];
 
+  function modifyGridbodyTop() {
+    const gridbody = document.querySelector("#gridbody");
+    if (gridbody) {
+      gridbody.style.top = "10px";
+      console.log("✅ Gridbody top modified to 10px");
+    } else {
+      console.warn("❌ #gridbody not found.");
+    }
+  }  
   function createRow(rowId, sources, height) {
     const row = document.createElement("div");
     row.id = rowId;
@@ -100,6 +109,9 @@
     } else {
       console.log("ℹ️ Second row already exists.");
     }
+
+    // Modify gridbody top position
+    modifyGridbodyTop();
   }
 
   const interval = setInterval(() => {
